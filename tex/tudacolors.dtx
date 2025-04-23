@@ -169,8 +169,12 @@
 % \begin{implementation}
 % \begin{optionenv}{cmyk, RGB}
 %    \begin{macrocode}
-	cmyk .code:n = \PassOptionsToPackage{cmyk}{xcolor},
-	RGB .code:n = \PassOptionsToPackage{RGB}{xcolor},
+	cmyk .code:n = \cs_if_exist:NTF \selectcolormodel
+		{\selectcolormodel{cmyk}}
+		{\PassOptionsToPackage{cmyk}{xcolor}},
+	RGB .code:n = \cs_if_exist:NTF \selectcolormodel
+		{\selectcolormodel{RGB}}
+		{\PassOptionsToPackage{RGB}{xcolor}},
 %    \end{macrocode}
 % \end{optionenv}
 % \end{implementation}
