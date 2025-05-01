@@ -248,10 +248,22 @@
 \KOMAoptions{backaddress=plain}
 \setkomavar{backaddressseparator}{\,$\vert$\,}
 %    \end{macrocode}
-% DOKU neue komavars
+% \begin{documentation}
+% \subsection{Additional KOMA Variables defined for TUDa-CI}
+% The letter template requires some additional variables:
+% \begin{description}
+% \item[frominstitution] institute/department/… in German
+% \item[frominstitution-en] institute/department/… in English
+% \item[fromfunction] position or job title of the sender
+% \end{description}
+% \end{documentation}
+% \begin{implementation}
 %    \begin{macrocode}
 \newkomavar{frominstitution}
 \newkomavar{frominstitution-en}
+\newkomavar{fromfunction}
+%    \end{macrocode}
+%    \begin{macrocode}
 \newkomafont{ptxcd_location}{\accentfont\normalcolor}
 \setkomafont{fromname}{\small}
 \newkomafont{ptxcd_frominst}{\small\ptxcd_use_premiumcolor_text: }
@@ -260,6 +272,7 @@
 \setkomafont{refvalue}{}
 \setkomafont{pageheadfoot}{\footnotesize}
 %    \end{macrocode}
+% \end{implementation}
 % \begin{documentation}
 % \DescribeMacro{\TUD@locfield}
 %
@@ -515,7 +528,6 @@
 % signature raggedright
 %    \begin{macrocode}
 \let\raggedsignature\raggedright
-\newkomavar{fromfunction}
 \bool_if:NT \g_@@_letter_raggedright_bool {\AtBeginLetter{\RaggedRight}}
 %    \end{macrocode}
 % backwards compatibility for KOMA-Script

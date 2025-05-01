@@ -1411,6 +1411,14 @@
 %</class>
 %<*class|exercise|sciposter|poster>
 % \fi
+% \begin{documentation}
+% \DescribeKeyOption{paper=a\meta{n}/portrait/landscape}{\meta{depends on document type}}
+% The supported paper sizes as well as the default setting depends on the document type.
+% Standard print documents use \value{a4} and support the fulle range from \value{a0} to \value{a6}.
+% The default value for posters is \value{a0} and these only support up to \value{a3} (SciPoster) or \value{a4} (Poster).
+% \end{documentation}
+% \begin{implementation}
+% \begin{optionenv}{paper}
 %    \begin{macrocode}
   paper .choices:nn = {
 %<sciposter>      a0,a1,a2,a3
@@ -1440,6 +1448,7 @@
 %<!(sciposter|poster)>  a4,
 %<sciposter|poster>  a0,
 %    \end{macrocode}
+% \end{optionenv}
 % \iffalse
 %</class|exercise|sciposter|poster>
 %<*class>
