@@ -3063,6 +3063,7 @@
 % \fi
 %    \begin{macrocode}
 \tl_new:N \g_ptxcd_thesis_drtext_tl
+\bool_new:N \g_@@_dr_bool
 \clist_if_exist:NF \g_ptxcd_Required_title_data_clist {\clist_new:N \g_ptxcd_Required_title_data_clist}
 
 % Declare macros for department
@@ -3088,7 +3089,7 @@
     \ptxcd_declare_caption:Nnn \ptxcd_departmentprefix: {im~ \departmentname}{in~the~\departmentname{}~ of}
     \ptxcd_declare_caption:Nnn \ptxcd_in_department {\ptxcd_departmentprefix:{}~\ptxcd_department:}{\ptxcd_departmentprefix:{}~\ptxcd_department:}
   }
-  {\bool_if:NTF \g_ptxcd_dr_bool
+  {\bool_if:NTF \g_@@_dr_bool
     {
       \msg_warning:nnn{tudapub/thesis} {unrecognized-department} {#1}
       \gdef\ptxcd_department:{#1}
@@ -3147,17 +3148,17 @@
   type .choice:,
   type/sta .code:n = {\def\ptxcd_thesisType{Studienarbeit}
       \clist_gset:Nn \g_ptxcd_Required_title_data_clist {title, author, date}
-      \bool_gset_false:N \g_ptxcd_dr_bool
+      \bool_gset_false:N \g_@@_dr_bool
     },
 %   type/diplom  .code:n = {\def\ptxcd_thesisType{Diplomarbeit}\clist_gset:Nn \g_ptxcd_Required_title_data_clist {title, author, submissiondate, reviewer, department}},
   type/bsc  .meta:n = {type=bachelor},
-  type/bachelor  .code:n = {\ptxcd_declare_caption:Nnn \ptxcd_thesisType{Bachelorarbeit}{bachelor~ thesis}\def\@ThesisTypeArticle{die}\clist_gset:Nn \g_ptxcd_Required_title_data_clist {title, author, submissiondate, department, reviewer}\bool_gset_false:N \g_ptxcd_dr_bool},
-  type/pp  .code:n = { \ptxcd_declare_caption:Nnn \ptxcd_thesisType {Project-Proposal}{project~ proposal}\def\@ThesisTypeArticle{das}\clist_gset:Nn \g_ptxcd_Required_title_data_clist {title, author, date, department}\bool_gset_false:N \g_ptxcd_dr_bool},
+  type/bachelor  .code:n = {\ptxcd_declare_caption:Nnn \ptxcd_thesisType{Bachelorarbeit}{bachelor~ thesis}\def\@ThesisTypeArticle{die}\clist_gset:Nn \g_ptxcd_Required_title_data_clist {title, author, submissiondate, department, reviewer}\bool_gset_false:N \g_@@_dr_bool},
+  type/pp  .code:n = { \ptxcd_declare_caption:Nnn \ptxcd_thesisType {Project-Proposal}{project~ proposal}\def\@ThesisTypeArticle{das}\clist_gset:Nn \g_ptxcd_Required_title_data_clist {title, author, date, department}\bool_gset_false:N \g_@@_dr_bool},
   type/msc  .meta:n = {type=master},
-  type/master  .code:n = \ptxcd_declare_caption:Nnn \ptxcd_thesisType{Masterarbeit}{master~ thesis}\def\@ThesisTypeArticle{die}\clist_gset:Nn \g_ptxcd_Required_title_data_clist {title, author, submissiondate, department, reviewer}\bool_gset_false:N \g_ptxcd_dr_bool,
-  type/dr  .code:n = \ptxcd_declare_caption:Nnn \ptxcd_thesisType{Dissertation}{doctoral~ thesis}\ptxcd_declare_caption:Nnn\ptxcd_thesisStatus{vorgelegte}{submitted}\def\@ThesisTypeArticle{die}\clist_gset:Nn \g_ptxcd_Required_title_data_clist {title, author, submissiondate , department, reviewer}\bool_gset_true:N \g_ptxcd_dr_bool,
-  type/drfinal  .code:n = \ptxcd_declare_caption:Nnn \ptxcd_thesisType {Dissertation}{doctoral~ thesis}\ptxcd_declare_caption:Nnn\ptxcd_thesisStatus{genehmigte}{accepted}\def\@ThesisTypeArticle{die}\clist_gset:Nn \g_ptxcd_Required_title_data_clist {title, author, submissiondate,examdate, department, reviewer}\bool_gset_true:N \g_ptxcd_dr_bool,
-  type/unknown  .code:n = \def\ptxcd_thesisType{#1}\clist_gset:Nn \g_ptxcd_Required_title_data_clist {}\def\@ThesisTypeArticle{die}\bool_gset_false:N \g_ptxcd_dr_bool,
+  type/master  .code:n = \ptxcd_declare_caption:Nnn \ptxcd_thesisType{Masterarbeit}{master~ thesis}\def\@ThesisTypeArticle{die}\clist_gset:Nn \g_ptxcd_Required_title_data_clist {title, author, submissiondate, department, reviewer}\bool_gset_false:N \g_@@_dr_bool,
+  type/dr  .code:n = \ptxcd_declare_caption:Nnn \ptxcd_thesisType{Dissertation}{doctoral~ thesis}\ptxcd_declare_caption:Nnn\ptxcd_thesisStatus{vorgelegte}{submitted}\def\@ThesisTypeArticle{die}\clist_gset:Nn \g_ptxcd_Required_title_data_clist {title, author, submissiondate , department, reviewer}\bool_gset_true:N \g_@@_dr_bool,
+  type/drfinal  .code:n = \ptxcd_declare_caption:Nnn \ptxcd_thesisType {Dissertation}{doctoral~ thesis}\ptxcd_declare_caption:Nnn\ptxcd_thesisStatus{genehmigte}{accepted}\def\@ThesisTypeArticle{die}\clist_gset:Nn \g_ptxcd_Required_title_data_clist {title, author, submissiondate,examdate, department, reviewer}\bool_gset_true:N \g_@@_dr_bool,
+  type/unknown  .code:n = \def\ptxcd_thesisType{#1}\clist_gset:Nn \g_ptxcd_Required_title_data_clist {}\def\@ThesisTypeArticle{die}\bool_gset_false:N \g_@@_dr_bool,
   ignore-missing-data .bool_gset:N = \g_ptxcd_missing_data_warning_bool,
   ignore-missing-data .initial:n = false,
   department .tl_gset:N  = \g_ptxcd_department_choice_tl,
@@ -3248,12 +3249,12 @@
 
 \gdef\ptxcd_birthplace{}
 \newcommand*{\birthplace}[1]{%
-  \bool_if:NTF \g_ptxcd_dr_bool
+  \bool_if:NTF \g_@@_dr_bool
   {\gdef\ptxcd_birthplace{#1}}
   {\msg_info:nnn{tudapub/thesis} {dr-field-only} {birthplace}}
 }
 
-\publishers{Darmstadt\bool_if:NT \g_ptxcd_dr_bool {,~Technische~Universität~Darmstadt}}
+\publishers{Darmstadt\bool_if:NT \g_@@_dr_bool {,~Technische~Universität~Darmstadt}}
 
 \seq_new:N \g_ptxcd_reviewer_seq
 \NewDocumentCommand{\reviewer}{som}{
@@ -3286,7 +3287,7 @@
 
 \gdef\ptxcd_examdate{}
 \newcommand*{\examdate}[1]{
-  \bool_if:NTF \g_ptxcd_dr_bool
+  \bool_if:NTF \g_@@_dr_bool
   {\gdef\ptxcd_examdate{#1}}
   {\msg_info:nnn{tudapub/thesis} {dr-field-only} {examdate}}
 }
@@ -3574,7 +3575,7 @@
           \selectfont
           {\ifx\@subtitle\@empty\else\usekomafont{subtitle}{\@subtitle\par}\fi}%
           \usekomafont{subject}
-          \bool_if:NT \g_ptxcd_dr_bool {\selectlanguage{german}}
+          \bool_if:NT \g_@@_dr_bool {\selectlanguage{german}}
           \tl_if_empty:NF \g_ptxcd_titleintro_tl {\g_ptxcd_titleintro_tl\par}
           \tl_if_empty:NF \g_ptxcd_thesis_drtext_tl {\g_ptxcd_thesis_drtext_tl\par}
           {%
@@ -3667,7 +3668,7 @@
 
 \newcommand*{\@ThesisType}{\ptxcd_thesisType}
 
-\bool_if:NTF \g_ptxcd_dr_bool {
+\bool_if:NTF \g_@@_dr_bool {
   \keys_define:nn {ptxcd/thesis} {
     affidavit .choices:nn = {dr}{\tl_gset_eq:NN  \g_@@_affidavit_version_tl \l_keys_choice_tl},
     affidavit / default .meta:n = {affidavit=dr},
@@ -3689,7 +3690,7 @@
   }%
   \clearpage
   \begin{otherlanguage}{german}
-    \bool_if:NTF \g_ptxcd_dr_bool {
+    \bool_if:NTF \g_@@_dr_bool {
       \g_@@_affidavit_dr_tl
     } {
       \tl_use:c {g_@@_affidavit_\g_@@_affidavit_version_tl _tl}
