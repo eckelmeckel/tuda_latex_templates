@@ -794,20 +794,23 @@
 % The data should be provided by the TUprints submission process.
 % \begin{example}
 % \tuprints{
-%   printid=12345,
-%   urn=123456,
+%   doi=https://doi.org/10.26083/tuda-1234,
+%   urn=https://nbn-resolving.de/urn:nbn:de:tuda-tuda-567890,
+%   url=https://tuprints.ulb.tu-darmstadt.de/handle/tuda/56789,
 %   year=2022
 % }
 % \end{example}
 %
 % \DescribeKeyOption{printid=\meta{TUprints print ID}}{\meta{initially unset}}*
+% \DescribeKeyOption{url=\meta{TUprints print ID}}{\meta{initially referencing the printid}}*
 % \DescribeKeyOption{urn=\meta{TUprints URN}}{\meta{initially unset}}*
+% \DescribeKeyOption{doi=\meta{TUprints DOI}}{\meta{initially unset}}*
 % If the argument does not contain an equals sign, the value is set as \option{printid} and no \option{urn} is specified.
 %
-% \option{printid} is the ID number of the TUprints entry and will be used automatically to create a hyperlink to the corresponding DOI. %%^^A\issue 505
+% \option{printid} is the ID number of the TUprints entry and will be used automatically to create a hyperlink to the corresponding URL. %%^^A\issue 505
 % The URN is – in addition to the DOI – a permanently unique resource identifier for the document.
 % In TUprints, the number corresponds to the \option{printid} with the addition of a check digit.
-% Both dates can be found in the details of the TUprints entry.
+% All dates can be found in the details of the TUprints entry.
 %
 % \minisec{License information}
 % \DescribeKeyOption{license=\meta{License key or license text}}{cc-by-4.0}*
@@ -3318,16 +3321,33 @@
 % \changes{v4.04}{2025-11-04}{Change prefixes for tuprints to match the new server infrastructure \issue{520}}
 %    \begin{macrocode}
 \tl_const:Nn \c_@@_doi_prefix_tl {
-	 https://doi.org/10.26083/tuda-
+	 doi.org/10.26083/tuda-
 }
 \tl_const:Nn \c_@@_urn_prefix_tl {
-	https://nbn-resolving.de/urn:nbn:de:tuda-tuda-
+	nbn-resolving.de/urn:nbn:de:tuda-tuda-
 }
+\tl_const:Nn \c_@@_url_prefix_tl {
+	tuprints.ulb.tu-darmstadt.de/handle/tuda/
+}
+\tl_const:Nn \c_@@_link_prefix_tl {
+	https://
+}
+
 \cs_new:Nn \_@@_add_url_prefix:nn {
+	\tl_gclear:c {g_ptxcd_thesis_#1_tl}
 	\regex_if_match:nnTF {^https?://} {#2} {
 		\tl_gset:cn {g_ptxcd_thesis_#1_tl} {#2}
 	} {
-		\tl_gset:ce {g_ptxcd_thesis_#1_tl} {\exp_not:v {c_@@_#1_prefix_tl} \exp_not:n {#2}}
+		\seq_set_split:Nne \l_tmpa_seq {/} {\tl_use:c {c_@@_#1_prefix_tl}}
+		\tl_set:Nn \l_tmpa_tl {#2}
+		\seq_map_indexed_inline:Nn \l_tmpa_seq {
+			\regex_replace_once:nnN {^##2/?} {} \l_tmpa_tl
+		}
+		\tl_gset:ce {g_ptxcd_thesis_#1_tl} {
+			\exp_not:N \c_@@_link_prefix_tl
+			\exp_not:v {c_@@_#1_prefix_tl}
+			\exp_not:V \l_tmpa_tl
+		}
 	}
 }
 
@@ -3336,10 +3356,12 @@
 %    \begin{macrocode}
 \tl_new:N  \g_ptxcd_thesis_doi_tl
 \tl_new:N \g_ptxcd_thesis_urn_tl
-\tl_gset:Ne \g_ptxcd_thesis_doi_tl {\exp_not:v {c__ptxcd_doi_prefix_tl} \exp_not:N \g_ptxcd_thesis_tuprints_tl}
+\tl_new:N \g_ptxcd_thesis_url_tl
+\tl_gset:Ne \g_ptxcd_thesis_url_tl {\c_@@_link_prefix_tl\c_@@_url_prefix_tl\exp_not:N \g_ptxcd_thesis_tuprints_tl}
 
 \keys_define:nn {ptxcd/thesis} {
   urn .code:n = {\_@@_add_url_prefix:nn {urn} {#1}},
+  url .code:n = {\_@@_add_url_prefix:nn {url} {#1}},
   printid .tl_gset:N = \g_ptxcd_thesis_tuprints_tl,
 %    \end{macrocode}
 % \changes{v4.02}{2025-03-03}{Add initial setting for doi to use printid.}
@@ -3421,6 +3443,7 @@
     \selectlanguage{german}
     Bitte~zitieren~Sie~dieses~Dokument~als:\par
     \tl_if_empty:NF \g_ptxcd_thesis_urn_tl {URN:~\url{\g_ptxcd_thesis_urn_tl}\par}
+    \tl_if_empty:NF \g_ptxcd_thesis_url_tl {URL:~\url{\g_ptxcd_thesis_url_tl}\par}
     \tl_if_empty:NF \g_ptxcd_thesis_doi_tl {DOI:~\url{\g_ptxcd_thesis_doi_tl}\par}
     \tl_if_empty:NF \g_ptxcd_thesis_publication_year_tl {Jahr~der~Veröffentlichung~auf~TUprints:~\g_ptxcd_thesis_publication_year_tl}
     \par\vspace{\baselineskip}
